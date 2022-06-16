@@ -1,0 +1,187 @@
+@charset "utf-8";
+
+.content{
+	min-height:980px;
+}
+body{
+	margin: 0 !important;
+	padding:0px;
+	}
+	
+.index_content{
+	height:980px;
+}
+h3{
+	text-align:center;
+}
+
+.slide { 
+	position: absolute;
+	height: 980px !important;
+	width: 100%; 
+	background-position: center; 
+	background-size: cover; 
+	
+} 
+
+.img1 { 
+	background-image: url(../../images/gym.jpg); 
+	animation: slide_img_1 15s infinite; 
+}
+.img2 { 
+	background-image: url(../../images/running.jpg); 
+	animation: slide_img_2 15s infinite; 
+} 
+.img3 { 
+	background-image: url(../../images/running2.jpg); 
+	animation: slide_img_3 15s infinite; 
+} 
+
+ @keyframes slide_img_1 { 
+	0% { opacity: 1; } 
+	12% { opacity: 1; } 
+	23% { opacity: 1; } 
+	34% { opacity: 0; } 
+	45% { opacity: 0; } 
+	56% { opacity: 0; } 
+	67% { opacity: 0; } 
+	78% { opacity: 0; } 
+	89% { opacity: 0; } 
+	100% { opacity: 1; } }
+@keyframes slide_img_2 { 
+	0% { opacity: 0; } 
+	12% { opacity: 0; } 
+	23% { opacity: 0; } 
+	34% { opacity: 1; } 
+	45% { opacity: 1; } 
+	56% { opacity: 1; } 
+	67% { opacity: 0; } 
+	78% { opacity: 0; } 
+	89% { opacity: 0; } 
+	100% { opacity: 0; } } 
+@keyframes slide_img_3 { 
+	0% { opacity: 0; } 
+	12% { opacity: 0; } 
+	23% { opacity: 0; } 
+	34% { opacity: 0; } 
+	45% { opacity: 0; } 
+	56% { opacity: 0; } 
+	67% { opacity: 1; } 
+	78% { opacity: 1; } 
+	89% { opacity: 1; } 
+	100% { opacity: 0; } } 
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+    
+}
+
+/* index.jsp */
+.index_content{
+	height:980px;
+}
+
+/*.page {
+     width: 1440px; 
+    margin: 0 auto;
+}*/
+
+ header {
+    width: 100;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header > h2 {
+	margin-left:20px;
+}
+
+header > nav {
+	width:600px;
+	height:100%;
+}
+
+header ul {
+	width:100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+header ul > li {
+	font-size:20px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+header ul > li > a{
+	text-decoration: none;
+    outline: none;
+    font-size: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+footer {
+	display:block;
+    width: 100%;
+    height: 155px; /* footer의 높이 */
+    /*position: absolute;*/
+    bottom: 0;
+    left: 0;
+    color:white;
+    background-color:black;
+    /*position : fixed;*/
+    position : relative;
+  	/* transform : translateY(-100%); */
+}
+
+header ul> li a:link{
+	color:black;
+    }
+header ul> li a:visited{
+	color:black;
+    }
+header ul> li a:hover{
+	color:red;
+    }
+header ul> li a:active{
+	color:green;
+    }
+
+header h2 a:link{
+	color:black;
+    }
+header h2 a:visited{
+	color:black;
+    }
+header h2 a:hover{
+	color:red;
+    }
+header h2 a:active{
+	color:green;
+    }
+    
+table {
+	margin:auto;
+}
+
+.footer_inner{
+	padding-top:50px;
+	text-align:right;
+	padding-right:10px;
+}
+
+/* memberLogin.jsp */
+
+#find{
+	text-decoration: none;
+}
