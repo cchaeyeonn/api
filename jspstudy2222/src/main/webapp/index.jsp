@@ -5,7 +5,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>HOME git 수정</title>
+  <title>HOME git 수정222</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
