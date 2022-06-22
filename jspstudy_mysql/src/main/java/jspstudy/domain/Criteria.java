@@ -9,7 +9,7 @@ public class Criteria {//페이지에 대한 값담기
 	
 	public Criteria() {	//기본값 지정
 		this.page = 1;
-		this.perPageNum = 15;
+		this.perPageNum = 10;
 	}
 
 

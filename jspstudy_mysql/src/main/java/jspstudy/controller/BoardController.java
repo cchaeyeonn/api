@@ -51,9 +51,10 @@ public class BoardController extends HttpServlet {
 		
 		int sizeLimit = 1024*1024*15;
 		//String uploadPath="D:\\openApi(B)\\dev\\jspstudy\\src\\main\\webapp\\";
-		String uploadPath="D:\\dev\\workspace\\jspstudy\\src\\main\\webapp\\";	//이미지 올라가는 경로 지정(image전까지)
+		//String uploadPath="D:\\dev\\workspace\\jspstudy\\src\\main\\webapp\\";	//이미지 올라가는 경로 지정(image전까지)
+		String uploadPath="D:\\dev\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\jspstudy\\";
 		String saveFolder="images";
-		String saveFullPath = uploadPath+saveFolder;
+		String saveFullPath = uploadPath+saveFolder; 
 
 		
 		
@@ -68,9 +69,9 @@ public class BoardController extends HttpServlet {
 		}
 		
 		
-
 //글쓰기 처리화면 시작
 		else if (command.equals("/board/boardWriteAction.do")) {
+			
 			System.out.println("글쓰기 처리 화면으로 들어왔음");
 			
 			MultipartRequest multipartRequest = null;

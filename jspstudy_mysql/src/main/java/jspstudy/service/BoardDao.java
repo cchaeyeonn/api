@@ -50,7 +50,7 @@ public class BoardDao {
 		 * VALUES(1,1,0,0,?,?,?,?,?,?,?); ";*/
 		
 		String sql="INSERT INTO r_tip (origintidx,t_depth,t_level_,t_head,t_subject,t_content,t_writer,t_ip,m_midx,t_filename)"
-				+ " select max(bidx)+1,0,0,?,?,?,?,?,?,? from r_tip";
+				+ " select max(tidx)+1,0,0,?,?,?,?,?,?,? from r_tip";
 		
 		
 		
@@ -95,26 +95,29 @@ public class BoardDao {
 		
 		String str = "";
 		if(scri.getSearchType().equals("t_subject")) {
-			str = "and t_subject like ?";	//?는 키워드
+			str = "and t_subject like concat('%',?,'%')";	//?는 키워드
 		}
 		else {
-			str = "and t_writer like ?";
+			str = "and t_writer like concat('%',?,'%')";
 		}
 		
 		
-		String sql = "SELECT * FROM("
-				+"SELECT @ROWNUM AS rnum, A.* FROM ("
-				+"select * from r_tip where t_delyn='N' "+str+" order by origintidx DESC, t_depth ASC) A"
-				+") B WHERE rnum BETWEEN ? AND ?";
+		/*
+		 * String sql = "SELECT * FROM(" +"SELECT @ROWNUM AS rnum, A.* FROM ("
+		 * +"select * from r_tip where t_delyn='N' "
+		 * +str+" order by origintidx DESC, t_depth ASC) A"
+		 * +") B WHERE rnum BETWEEN ? AND ?";
+		 */
 		
+		String sql = "select * from r_tip where t_delyn='N' "+str+" order by origintidx DESC, t_depth ASC LIMIT ?,10";
 		try{
 			pstmt = conn.prepareStatement(sql);	//오류가 날수 있어서 try catch문에 담음
 												//연결객체에 있는 prepareStatement메소드를 실행해서 sql문자열을 담아 구문객체를 만든다
-			pstmt.setString(1, "%"+scri.getKeyword()+"%");
-			pstmt.setInt(2, (scri.getPage()-1)*15+1);	//1~15
-			pstmt.setInt(3, scri.getPage()*15); 		//16~30
+			pstmt.setString(1, scri.getKeyword());
+			pstmt.setInt(2, (scri.getPage()-1)*10);	//1~10 10개씩
+		//	pstmt.setInt(3, scri.getPage()*15); 		//16~30
 			rs = pstmt.executeQuery();	//실행시켜 rs에 담는다
-			
+			System.out.println("rs:"+rs);
 			
 			while(rs.next()){	//반복문 사용 //rs.next() 다음값이 존재하면 true이고 그 행으로 커서가 이동하는 메소드
 				BoardVo bv = new BoardVo();	//반복할때마다 객체생성한다(mv 객체생성)
@@ -135,9 +138,9 @@ public class BoardDao {
 			e.printStackTrace();
 		}finally {
 			try {
-				rs.close();
+			//	rs.close();
 				pstmt.close();
-				conn.close();
+			//	conn.close();
 			} catch (SQLException e) {	//메모리를 관리하기 수월
 				e.printStackTrace();
 			}
@@ -202,7 +205,8 @@ public class BoardDao {
 	
 //updateboard
 	public int updateBoard(String t_head, String t_subject,String t_content,String t_writer, int m_midx, int tidx) {
-		String sql = "update r_tip set t_head=?,t_subject=?,t_content=?,t_writer=?, m_midx=?, t_writeday=sysdate where tidx=?";
+		/*String sql = "update r_tip set t_head=?,t_subject=?,t_content=?,t_writer=?, m_midx=?, t_writeday=sysdate where tidx=?";*/
+		String sql = "update r_tip set t_head=?,t_subject=?,t_content=?,t_writer=?, m_midx=? where tidx=?";
 		int value=0;
 		
 		try {
@@ -227,7 +231,8 @@ public class BoardDao {
 	
 //deleteboard
 	public int deleteBoard(int tidx) {
-		String sql = "update r_tip set t_delyn='Y',t_writeday=sysdate where tidx=?";
+		/*String sql = "update r_tip set t_delyn='Y',t_writeday=sysdate where tidx=?";*/
+		String sql = "update r_tip set t_delyn='Y' where tidx=?";
 		int value=0;
 		
 		try {
@@ -250,8 +255,11 @@ public class BoardDao {
 		
 		String sql1="update r_tip set t_depth = t_depth+1 where origintidx=? and t_depth>?";
 		
-		String sql2="INSERT INTO b_board(tidx,origintidx,t_depth,t_level_,t_subject,t_content,t_writer,t_ip,m_midx)"
-					+"VALUES(BIDX_B_SEQ.NEXTVAL,?,?,?,?,?,?,?,?)";	//넘어온 데이터에 대입해야해서 ?로 받음
+		/*String sql2="INSERT INTO r_tip(tidx,origintidx,t_depth,t_level_,t_subject,t_content,t_writer,t_ip,m_midx)"
+					+"VALUES(BIDX_B_SEQ.NEXTVAL,?,?,?,?,?,?,?,?)";	//넘어온 데이터에 대입해야해서 ?로 받음*/
+		
+		String sql2="INSERT INTO r_tip(origintidx,t_depth,t_level_,t_subject,t_content,t_writer,t_ip,m_midx)"
+				+"VALUES(?,?,?,?,?,?,?,?)";
 		
 		try {
 			conn.setAutoCommit(false);	//자동으로 커밋기능 off시켜 수동으로 만듦
@@ -306,14 +314,14 @@ public class BoardDao {
 		
 		String str = "";
 		if(scri.getSearchType().equals("t_subject")) {
-			str = "and t_subject like ?";	//?는 키워드
+			str = "and t_subject like concat('%',?,'%')";	//?는 키워드
 		}
 		else {
-			str = "and t_writer like ?";
+			str = "and t_writer like concat('%',?,'%')";
 		}
 		
 		
-		String sql="select count(*) as cnt from b_board where t_delyn='N' "+str+"";
+		String sql="select count(*) as cnt from r_tip where t_delyn='N' "+str+"";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
