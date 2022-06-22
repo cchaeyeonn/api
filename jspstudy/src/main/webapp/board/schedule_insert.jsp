@@ -17,7 +17,7 @@
 	ArrayList<ReserveDto> alist = (ArrayList<ReserveDto>)request.getAttribute("alist");	//컨트롤러에서 처리를 하고 (그 값을 담아서 여기서 꺼내서 사용)처리된 값을 담아서 여기로 넘겨서 사용하는 방법
 	
 	//System.out.println("alist는 "+alist.get(0).getRIDX());	//첫번째에 있는 ridx
-	System.out.println("alist는 "+alist.get(1).getRIDX());
+	//System.out.println("alist는 "+alist.get(1).getRIDX());
 	//System.out.println("alist는 "+alist.get(2).getRIDX());
 	
 %>
@@ -98,7 +98,7 @@
 							<td><input type="text" class="form-control" name="rs_date" placeholder="날짜을 입력해주세요."></td>
 						</tr>
 						<tr>
-							<td>선생님 번호 (1~6 중 1택/최 이 김 박 오 양)</td>
+							<td>선생님 번호 (1~6 중 1택/김 이 최 박 오 양)</td>
 							<td><input type="text" class="form-control" name="teidx" placeholder="선생님 번호를 입력해주세요."></td>
 						</tr>
 						

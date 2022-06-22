@@ -43,8 +43,16 @@ public class BoardDao {
 		/*String sql="INSERT INTO r_tip(tidx,origintidx,t_depth,t_level_,t_head,t_subject,t_content,t_writer,t_ip,m_midx,t_filename)"
 				+"VALUES(t_tidx_seq.NEXTVAL,t_tidx_seq.NEXTVAL,0,0,?,?,?,?,?,?,?)";//넘어온 데이터에 대입해야해서 ?로 받음*/
 		
-		String sql="INSERT INTO b_board(origintidx,t_depth,t_level_,t_head,t_subject,t_content,t_writer,t_ip,m_midx,t_filename)"
-				+" select max(bidx)+1,0,0,?,?,?,?,?,? from b_board";
+		/*String sql="INSERT INTO r_tip(origintidx,t_depth,t_level_,t_head,t_subject,t_content,t_writer,t_ip,m_midx,t_filename)"
+				+" select max(bidx)+1,0,0,?,?,?,?,?,? from r_tip";*/
+		
+		/*String sql="INSERT INTO r_tip(tidx,origintidx,t_depth,t_level_,t_head,t_subject,t_content,t_writer,t_ip,m_midx,t_filename) 
+		 * VALUES(1,1,0,0,?,?,?,?,?,?,?); ";*/
+		
+		String sql="INSERT INTO r_tip (origintidx,t_depth,t_level_,t_head,t_subject,t_content,t_writer,t_ip,m_midx,t_filename)"
+				+ " select max(bidx)+1,0,0,?,?,?,?,?,?,? from r_tip";
+		
+		
 		
 		
 		try {
@@ -95,8 +103,8 @@ public class BoardDao {
 		
 		
 		String sql = "SELECT * FROM("
-				+"SELECT ROWNUM AS rnum, A.* FROM ("
-				+"select * from b_board where t_delyn='N' "+str+" order by origintidx DESC, t_depth ASC) A"
+				+"SELECT @ROWNUM AS rnum, A.* FROM ("
+				+"select * from r_tip where t_delyn='N' "+str+" order by origintidx DESC, t_depth ASC) A"
 				+") B WHERE rnum BETWEEN ? AND ?";
 		
 		try{
@@ -148,7 +156,7 @@ public class BoardDao {
 		BoardVo bv = null;	//초기화 선언
 		ResultSet rs = null;	//초기화 선언
 		
-		String sql = "select * from b_board where tidx=?";
+		String sql = "select * from r_tip where tidx=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);	//쿼리화 시킴
@@ -194,7 +202,7 @@ public class BoardDao {
 	
 //updateboard
 	public int updateBoard(String t_head, String t_subject,String t_content,String t_writer, int m_midx, int tidx) {
-		String sql = "update b_board set t_head=?,t_subject=?,t_content=?,t_writer=?, m_midx=?, t_writeday=sysdate where tidx=?";
+		String sql = "update r_tip set t_head=?,t_subject=?,t_content=?,t_writer=?, m_midx=?, t_writeday=sysdate where tidx=?";
 		int value=0;
 		
 		try {
@@ -219,7 +227,7 @@ public class BoardDao {
 	
 //deleteboard
 	public int deleteBoard(int tidx) {
-		String sql = "update b_board set t_delyn='Y',t_writeday=sysdate where tidx=?";
+		String sql = "update r_tip set t_delyn='Y',t_writeday=sysdate where tidx=?";
 		int value=0;
 		
 		try {
@@ -240,7 +248,7 @@ public class BoardDao {
 	public int replyBoard(BoardVo bv) { // boardvo의 값을 하나로 담겨져서 넘어감
 		int value=0;	//지역변수 초기값
 		
-		String sql1="update b_board set t_depth = t_depth+1 where origintidx=? and t_depth>?";
+		String sql1="update r_tip set t_depth = t_depth+1 where origintidx=? and t_depth>?";
 		
 		String sql2="INSERT INTO b_board(tidx,origintidx,t_depth,t_level_,t_subject,t_content,t_writer,t_ip,m_midx)"
 					+"VALUES(BIDX_B_SEQ.NEXTVAL,?,?,?,?,?,?,?,?)";	//넘어온 데이터에 대입해야해서 ?로 받음
@@ -341,13 +349,19 @@ public class BoardDao {
 				+ "AND RS_DELYN='N' "
 				+ "ORDER BY A.RSIDX DESC" ;*/
 		
-		
-		String sql ="SELECT RS_STIME,RS_FTIME,RS_DATE,a.rsidx, c.tename ,c.tegender "
-				+ "FROM R_SCH A , R_RESERVE B, R_TEACH C WHERE A.RSIDX = B.RSIDX(+) "
-				+ "AND A.TEIDX= C.TEIDX "
-				+ "AND (R_APP='N' OR R_APP IS NULL) "
-				+ "AND RS_DELYN='N' "
-				+ "ORDER BY A.RS_DATE ASC, A.RS_FTIME ASC";
+		String sql="SELECT RS_STIME,RS_FTIME,RS_DATE,\r\n"
+				+ "a.rsidx, c.tename ,c.tegender \r\n"
+				+ "FROM R_SCH A left join R_RESERVE B on A.RSIDX = B.RSIDX \r\n"
+				+ "join R_TEACH C on A.TEIDX= C.TEIDX \r\n"
+				+ "AND (R_APP='N' OR R_APP IS NULL) \r\n"
+				+ "AND RS_DELYN='N' \r\n"
+				+ "ORDER BY A.RS_DATE ASC, A.RS_FTIME ASC;";
+		/*
+		 * String sql ="SELECT RS_STIME,RS_FTIME,RS_DATE,a.rsidx, c.tename ,c.tegender "
+		 * + "FROM R_SCH A , R_RESERVE B, R_TEACH C WHERE A.RSIDX = B.RSIDX(+) " +
+		 * "AND A.TEIDX= C.TEIDX " + "AND (R_APP='N' OR R_APP IS NULL) " +
+		 * "AND RS_DELYN='N' " + "ORDER BY A.RS_DATE ASC, A.RS_FTIME ASC";
+		 */
 		
 		//R_APP 예약 승인(N) RS_DELYN 삭제 여부 (N) == 예약 할수 있는 시간
 		
@@ -402,7 +416,9 @@ public class BoardDao {
 		/*String sql="INSERT INTO b_board(bidx,originbidx,depth,level_,subject,content,writer,ip,midx,filename)"
 					+"VALUES(BIDX_B_SEQ.NEXTVAL,bidx_b_seq.NEXTVAL,0,0,?,?,?,?,?,?)";*/
 		
-		String sql="INSERT INTO r_reserve(ridx,rsidx,m_midx,r_date) VALUES(r_ridx_seq.NEXTVAL,?,?,SYSDATE)";//넘어온 데이터에 대입해야해서 ?로 받음
+		/*String sql="INSERT INTO r_reserve(ridx,rsidx,m_midx,r_date) VALUES(r_ridx_seq.NEXTVAL,?,?,SYSDATE)";*/
+		String sql="INSERT INTO r_reserve(rsidx,m_midx) VALUES(?,?)";
+		//넘어온 데이터에 대입해야해서 ?로 받음
 		
 		
 		try {
@@ -433,7 +449,15 @@ public class BoardDao {
 	
 //마이페이지에 예약값 보여줄때
 	public ArrayList<ReserveDto> mypagereserve(int m_midx){
-		String sql="SELECT RS_STIME,RS_FTIME,RS_DATE,a.rsidx, c.tename,c.tegender FROM R_SCH A , R_RESERVE B, R_TEACH C WHERE M_MIDX=? AND A.RSIDX = B.RSIDX(+) AND A.TEIDX= C.TEIDX AND R_APP='Y' AND RS_DELYN='N' ORDER BY A.RSIDX DESC";
+		/*String sql="SELECT RS_STIME,RS_FTIME,RS_DATE,a.rsidx, c.tename,c.tegender FROM R_SCH A , R_RESERVE B, R_TEACH C WHERE M_MIDX=? AND A.RSIDX = B.RSIDX(+) AND A.TEIDX= C.TEIDX AND R_APP='Y' AND RS_DELYN='N' ORDER BY A.RSIDX DESC";*/
+		String sql="SELECT RS_STIME,RS_FTIME,RS_DATE,"
+				+ "a.rsidx,c.tename,c.tegender "
+				+ "FROM R_SCH A LEFT JOIN R_RESERVE B "
+				+ "ON A.RSIDX=B.RSIDX JOIN R_TEACH C "
+				+ "ON A.TEIDX=C.TEIDX "
+				+ "WHERE M_MIDX=? AND R_APP='Y' AND RS_DELYN='N' "
+				+ "ORDER BY A.RSIDX DESC";
+		
 		ResultSet rs=null;
 		ArrayList<ReserveDto> alist = new ArrayList<ReserveDto>();	//값을 담을 상자 생성
 		int flag =0;	//flag를 0으로 선언
@@ -485,7 +509,8 @@ public class BoardDao {
 		int value=0;	//지역변수 초기값
 		System.out.println("rs_stime"+rs_stime);
 		
-		String sql= "INSERT INTO r_sch(RSIDX,RS_STIME,RS_FTIME,RS_DATE,TEIDX,RS_DELYN) VALUES(r_sidx_seq.NEXTVAL,?,?,?,?,'N')";
+		/*String sql= "INSERT INTO r_sch(RSIDX,RS_STIME,RS_FTIME,RS_DATE,TEIDX,RS_DELYN) VALUES(r_sidx_seq.NEXTVAL,?,?,?,?,'N')";*/
+		String sql= "INSERT INTO r_sch(RS_STIME,RS_FTIME,RS_DATE,TEIDX,RS_DELYN) VALUES(?,?,?,?,'N')";
 		//넘어온 데이터에 대입해야해서 ?로 받음
 		
 		try {

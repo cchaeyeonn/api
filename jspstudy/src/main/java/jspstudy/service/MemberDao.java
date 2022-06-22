@@ -25,8 +25,9 @@ public class MemberDao {
 		public int insertMember(String M_MEMBERID, String M_MEMBERPWD, String M_MEMBERNAME, String M_MEMBERGENDER, String M_MEMBERPHONE, String M_MEMBERIP){
 			int value=0;
 			
-			String sql = "insert into b_member(M_MIDX,M_MEMBERID,M_MEMBERPWD,M_MEMBERNAME,M_MEMBERGENDER,M_MEMBERPHONE,M_MEMBERIP)"
-					+ "values(null,?,?,?,?,?,?)";
+			/*String sql = "insert into b_member(M_MIDX,M_MEMBERID,M_MEMBERPWD,M_MEMBERNAME,M_MEMBERGENDER,M_MEMBERPHONE,M_MEMBERIP)"
+					+ "values(null,?,?,?,?,?,?)";*/
+			String sql="insert into r_member(m_memberid,m_memberpwd,m_membername,m_membergender,m_memberphone,m_memberip) values(?,?,?,?,?,?);";
 			
 			try{
 				pstmt = conn.prepareStatement(sql);	//문자열의 쿼리가 구문화 됨
@@ -70,7 +71,7 @@ public class MemberDao {
 			//PreparedStatement pstmt = null;	//선언
 			ResultSet rs = null;	//선언
 			
-			String sql="select * from b_member where m_delyn='N' order by m_midx desc";	//쿼리구문을 문자열로 만들어 놓는다
+			String sql="select * from r_member where m_delyn='N' order by m_midx desc";	//쿼리구문을 문자열로 만들어 놓는다
 			
 			try{
 				pstmt = conn.prepareStatement(sql);	//연결객체에 있는 prepareStatement메소드를 실행해서 sql문자열을 담아 구문객체를 만든다
@@ -111,7 +112,7 @@ public class MemberDao {
 			MemberVo mv = null;
 			ResultSet rs = null;
 			
-			String sql="select * from b_member where m_delyn='N' and m_memberid=? and m_memberpwd=?";
+			String sql="select * from r_member where m_delyn='N' and m_memberid=? and m_memberpwd=?";
 			
 			try {
 				pstmt = conn.prepareStatement(sql);
@@ -147,7 +148,7 @@ public class MemberDao {
 		
 //아이디중복검사 체크 시작
 		public int checkId(String id) {	//유저가 입력한 값을 매개변수로 한다
-				String sql = "select * from b_member where m_memberid = ?";	//입력값이 테이블에 있는지 확인
+				String sql = "select * from r_member where m_memberid = ?";	//입력값이 테이블에 있는지 확인
 				int value = 0;
 				ResultSet rs = null;
 				
@@ -186,7 +187,7 @@ public class MemberDao {
 			
 			
 			/*String sql="select m_memberid"+"from r_member"+"where m_membername=? and"+"m_memberphone=?";*/
-			String sql="select m_memberid from b_member where m_membername=? AND m_memberphone=? AND m_delyn ='N'";
+			String sql="select m_memberid from r_member where m_membername=? AND m_memberphone=? AND m_delyn ='N'";
 			
 			try {
 				pstmt = conn.prepareStatement(sql);
@@ -223,7 +224,7 @@ public class MemberDao {
 					//String m_memberId = null;
 					
 					/*String sql="select m_memberid"+"from r_member"+"where m_membername=? and"+"m_memberphone=?";*/
-					String sql="select m_memberpwd from b_member where m_memberid=? AND m_memberphone=? AND m_delyn ='N'";
+					String sql="select m_memberpwd from r_member where m_memberid=? AND m_memberphone=? AND m_delyn ='N'";
 					
 					try {
 						pstmt = conn.prepareStatement(sql);
